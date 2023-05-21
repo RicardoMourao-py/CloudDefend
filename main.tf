@@ -84,19 +84,23 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
 
 resource "aws_s3_bucket" "site_bucket" {
   bucket = "check-request-2"
-  versioning {
-    enabled = true
+}
+
+resource "aws_s3_bucket_versioning" "versioning_S3" {
+  bucket = aws_s3_bucket.site_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_object" "index" {
   bucket = aws_s3_bucket.site_bucket.id
   key    = "index.html"
   source = "index.html"
   content_type = "text/html"
 }
 
-resource "aws_s3_bucket_object" "error" {
+resource "aws_s3_object" "error" {
   bucket = aws_s3_bucket.site_bucket.id
   key    = "error.html"
   source = "error.html"
@@ -143,6 +147,7 @@ resource "aws_api_gateway_method" "GetBuckets1" {
 
 # Etapa para a integração do S3 no GET raiz
 resource "aws_api_gateway_integration" "S3Integration1" {
+  depends_on = [aws_api_gateway_method.GetBuckets1]
   rest_api_id = "${aws_api_gateway_rest_api.MyS3.id}"
   resource_id = "${aws_api_gateway_rest_api.MyS3.root_resource_id}"
   http_method = "${aws_api_gateway_method.GetBuckets1.http_method}"
@@ -230,7 +235,7 @@ resource "aws_api_gateway_method_response" "response_200" {
     "method.response.header.Content-Type" = true
   }
 }
-
+ 
 resource "aws_api_gateway_method_response" "response_200_object" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
   resource_id = aws_api_gateway_resource.Object.id
@@ -245,5 +250,59 @@ resource "aws_api_gateway_method_response" "response_200_object" {
 resource "aws_api_gateway_deployment" "S3APIDeployment" {
   depends_on  = [aws_api_gateway_integration.S3Integration1]
   rest_api_id = "${aws_api_gateway_rest_api.MyS3.id}"
-  stage_name  = "MyS3"
+}
+
+resource "aws_api_gateway_stage" "MyS3stage" {
+  depends_on  = [aws_api_gateway_deployment.S3APIDeployment]
+  stage_name      = "MyS3"
+  rest_api_id     = aws_api_gateway_rest_api.MyS3.id
+  deployment_id   = aws_api_gateway_deployment.S3APIDeployment.id
+}
+
+##########################  WAF ####################################
+module "owasp_top_10" {
+  # This module is published on the registry: https://registry.terraform.io/modules/traveloka/waf-owasp-top-10-rules    
+
+  # Open the link above to see what the latest version is. Highly encouraged to use the latest version if possible.
+
+  source = "./waf"
+
+  # For a better understanding of what are those parameters mean,
+  # please read the description of each variable in the variables.tf file:
+  # https://github.com/traveloka/terraform-aws-waf-owasp-top-10-rules/blob/master/variables.tf 
+
+  product_domain                 = "tsi"
+  service_name                   = "tsiwaf"
+  environment                    = "staging"
+  description                    = "OWASP Top 10 rules for tsiwaf"
+  target_scope                   = "regional"
+}
+
+
+resource "aws_wafregional_web_acl" "WafDefend" {
+  name        = "VerifyRequest"
+  metric_name = "VerifyRequest"
+
+  default_action {
+    type = "ALLOW"
+  }
+
+  rule {
+    priority = "0"
+
+    # ID of the associated WAF rule
+    rule_id = module.owasp_top_10.rule_group_id
+
+    type = "GROUP"
+
+    override_action {
+      # Valid values are `NONE` and `COUNT`
+      type = "NONE"
+    }
+  }
+}
+
+resource "aws_wafregional_web_acl_association" "AssociaWAF" {
+  resource_arn = aws_api_gateway_stage.MyS3stage.arn
+  web_acl_id   = aws_wafregional_web_acl.WafDefend.id
 }
