@@ -84,19 +84,23 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
 
 resource "aws_s3_bucket" "site_bucket" {
   bucket = "check-request-2"
-  versioning {
-    enabled = true
+}
+
+resource "aws_s3_bucket_versioning" "versioning_S3" {
+  bucket = aws_s3_bucket.site_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_object" "index" {
   bucket = aws_s3_bucket.site_bucket.id
   key    = "index.html"
   source = "index.html"
   content_type = "text/html"
 }
 
-resource "aws_s3_bucket_object" "error" {
+resource "aws_s3_object" "error" {
   bucket = aws_s3_bucket.site_bucket.id
   key    = "error.html"
   source = "error.html"
@@ -143,6 +147,7 @@ resource "aws_api_gateway_method" "GetBuckets1" {
 
 # Etapa para a integração do S3 no GET raiz
 resource "aws_api_gateway_integration" "S3Integration1" {
+  depends_on = [aws_api_gateway_method.GetBuckets1]
   rest_api_id = "${aws_api_gateway_rest_api.MyS3.id}"
   resource_id = "${aws_api_gateway_rest_api.MyS3.root_resource_id}"
   http_method = "${aws_api_gateway_method.GetBuckets1.http_method}"
@@ -230,7 +235,7 @@ resource "aws_api_gateway_method_response" "response_200" {
     "method.response.header.Content-Type" = true
   }
 }
-
+ 
 resource "aws_api_gateway_method_response" "response_200_object" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
   resource_id = aws_api_gateway_resource.Object.id
@@ -243,7 +248,23 @@ resource "aws_api_gateway_method_response" "response_200_object" {
 }
 
 resource "aws_api_gateway_deployment" "S3APIDeployment" {
-  depends_on  = [aws_api_gateway_integration.S3Integration1]
+  depends_on  = [aws_api_gateway_method.GetBuckets1,
+                 aws_api_gateway_method.GetBuckets2, aws_api_gateway_method_response.response_200_object,
+                 aws_api_gateway_method_response.response_200, aws_api_gateway_integration_response.MyS3IntegrationResponse_object,
+                 aws_api_gateway_integration_response.MyS3IntegrationResponse, aws_api_gateway_integration.S3Integration1,
+                 aws_api_gateway_integration.S3Integration2, aws_api_gateway_resource.Object
+                ]
   rest_api_id = "${aws_api_gateway_rest_api.MyS3.id}"
-  stage_name  = "MyS3"
+}
+
+resource "aws_api_gateway_stage" "MyS3stage" {
+  depends_on  = [aws_api_gateway_method.GetBuckets1, aws_api_gateway_deployment.S3APIDeployment,
+                 aws_api_gateway_method.GetBuckets2, aws_api_gateway_method_response.response_200_object,
+                 aws_api_gateway_method_response.response_200, aws_api_gateway_integration_response.MyS3IntegrationResponse_object,
+                 aws_api_gateway_integration_response.MyS3IntegrationResponse, aws_api_gateway_integration.S3Integration1,
+                 aws_api_gateway_integration.S3Integration2, aws_api_gateway_resource.Object
+                ]
+  stage_name      = "MyS3"
+  rest_api_id     = aws_api_gateway_rest_api.MyS3.id
+  deployment_id   = aws_api_gateway_deployment.S3APIDeployment.id
 }
