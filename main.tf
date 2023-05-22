@@ -253,7 +253,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
 }
 
 resource "aws_api_gateway_stage" "MyS3stage" {
-  depends_on  = [aws_api_gateway_deployment.S3APIDeployment]
+  depends_on  = [aws_api_gateway_method.GetBuckets1, aws_api_gateway_deployment.S3APIDeployment]
   stage_name      = "MyS3"
   rest_api_id     = aws_api_gateway_rest_api.MyS3.id
   deployment_id   = aws_api_gateway_deployment.S3APIDeployment.id
