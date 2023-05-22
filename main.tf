@@ -248,12 +248,22 @@ resource "aws_api_gateway_method_response" "response_200_object" {
 }
 
 resource "aws_api_gateway_deployment" "S3APIDeployment" {
-  depends_on  = [aws_api_gateway_integration.S3Integration1]
+  depends_on  = [aws_api_gateway_method.GetBuckets1,
+                 aws_api_gateway_method.GetBuckets2, aws_api_gateway_method_response.response_200_object,
+                 aws_api_gateway_method_response.response_200, aws_api_gateway_integration_response.MyS3IntegrationResponse_object,
+                 aws_api_gateway_integration_response.MyS3IntegrationResponse, aws_api_gateway_integration.S3Integration1,
+                 aws_api_gateway_integration.S3Integration2, aws_api_gateway_resource.Object
+                ]
   rest_api_id = "${aws_api_gateway_rest_api.MyS3.id}"
 }
 
 resource "aws_api_gateway_stage" "MyS3stage" {
-  depends_on  = [aws_api_gateway_method.GetBuckets1, aws_api_gateway_deployment.S3APIDeployment]
+  depends_on  = [aws_api_gateway_method.GetBuckets1, aws_api_gateway_deployment.S3APIDeployment,
+                 aws_api_gateway_method.GetBuckets2, aws_api_gateway_method_response.response_200_object,
+                 aws_api_gateway_method_response.response_200, aws_api_gateway_integration_response.MyS3IntegrationResponse_object,
+                 aws_api_gateway_integration_response.MyS3IntegrationResponse, aws_api_gateway_integration.S3Integration1,
+                 aws_api_gateway_integration.S3Integration2, aws_api_gateway_resource.Object
+                ]
   stage_name      = "MyS3"
   rest_api_id     = aws_api_gateway_rest_api.MyS3.id
   deployment_id   = aws_api_gateway_deployment.S3APIDeployment.id
@@ -303,6 +313,7 @@ resource "aws_wafregional_web_acl" "WafDefend" {
 }
 
 resource "aws_wafregional_web_acl_association" "AssociaWAF" {
+  depends_on = [aws_api_gateway_stage.MyS3stage]
   resource_arn = aws_api_gateway_stage.MyS3stage.arn
   web_acl_id   = aws_wafregional_web_acl.WafDefend.id
 }
