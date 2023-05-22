@@ -24,7 +24,6 @@ resource "aws_s3_bucket_object" "error" {
   content_type = "text/html"
 }
 
-
 resource "aws_s3_bucket_website_configuration" "site_bucket" {
   bucket = aws_s3_bucket.site_bucket.id
 
@@ -35,6 +34,11 @@ resource "aws_s3_bucket_website_configuration" "site_bucket" {
   error_document {
     key = "error.html"
   }
+
+  depends_on = [
+    aws_s3_bucket_object.index,
+    aws_s3_bucket_object.error,
+  ]
 }
 
 resource "aws_s3_bucket_public_access_block" "meu_bucket" {
@@ -49,6 +53,10 @@ resource "aws_s3_bucket_public_access_block" "meu_bucket" {
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.site_bucket.id
   policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+
+  depends_on = [
+    aws_s3_bucket_website_configuration.site_bucket,
+  ]
 }
 
 data "aws_iam_policy_document" "allow_access_from_another_account" {
