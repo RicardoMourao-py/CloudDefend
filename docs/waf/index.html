@@ -1,0 +1,630 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../apiProxy/">
+      
+      
+      <link rel="icon" href="../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
+    
+    
+      
+        <title>Proteção WAF - CloudDefend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ded33207.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  <link rel="stylesheet" href="../assets/stylesheets/custom.f7ec4df2.min.css">
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="pink">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#protecao-waf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CloudDefend" class="md-header__button md-logo" aria-label="CloudDefend" data-md-component="logo">
+      
+  <img src="../img/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CloudDefend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              <b> Proteção WAF </b>
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RicardoMourao-py/CloudDefend.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RicardoMourao-py/CloudDefend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CloudDefend" class="md-nav__button md-logo" aria-label="CloudDefend" data-md-component="logo">
+      
+  <img src="../img/favicon.png" alt="logo">
+
+    </a>
+    CloudDefend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RicardoMourao-py/CloudDefend.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RicardoMourao-py/CloudDefend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../init/" class="md-nav__link">
+        <b> Hospede um Site Estático com Segurança </b>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hostedS3/" class="md-nav__link">
+        <b> Hospeda Site no S3 </b>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apiProxy/" class="md-nav__link">
+        <b> API Gateway Proxy </b>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          <b> Proteção WAF </b>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        <b> Proteção WAF </b>
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introducao" class="md-nav__link">
+    Introdução
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodologia" class="md-nav__link">
+    Metodologia
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagens-de-verificacao" class="md-nav__link">
+    Imagens de Verificação
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigo" class="md-nav__link">
+    Código
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introducao" class="md-nav__link">
+    Introdução
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodologia" class="md-nav__link">
+    Metodologia
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagens-de-verificacao" class="md-nav__link">
+    Imagens de Verificação
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigo" class="md-nav__link">
+    Código
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="protecao-waf"><b> Proteção WAF </b><a class="headerlink" href="#protecao-waf" title="Permanent link">&para;</a></h1>
+<h2 id="introducao">Introdução<a class="headerlink" href="#introducao" title="Permanent link">&para;</a></h2>
+<p>Caso seu objetivo seja boas práticas na hospedagem de um site estático, na qual você quer utilizar o endpoint fornecido da API Gateway (utilizando ela como proxy), mas além disso quer proteger seu WebSite de requisições maliciosas, esse é o tutorial adequado para você. Vamos utilizar os recursos do <a href="https://developer.hashicorp.com/terraform/tutorials/aws-get-started/infrastructure-as-code">terraform</a> para montar nossa infraestrutura.</p>
+<p>Observe abaixo a arquitetura:</p>
+<h2 id="_1"><img alt="" src="../img/icon-elementos.png" /><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="metodologia">Metodologia<a class="headerlink" href="#metodologia" title="Permanent link">&para;</a></h2>
+<p>Caso prefira, no vídeo abaixo é possível ver a implementação do projeto completo.</p>
+<iframe width="630" height="450" src="https://www.youtube.com/embed/z0gkqTylu5k" title="Hospede seu Site com Segurança na AWS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<ol>
+<li>Em primeiro momento, <strong>se ainda não clonou</strong>, no seu diretório clone o repositório e entre na raiz do repositório. Se clonou, siga para a etapa 2:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git clone https://github.com/RicardoMourao-py/CloudDefend.git
+</span></code></pre></div></li>
+<li>Entre na branch <code>main</code> com o comando abaixo:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git checkout main
+</span></code></pre></div></li>
+<li>Na pasta raíz, exporte as credenciais da sua conta da AWS no terminal:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>export AWS_ACCESS_KEY_ID=&lt;ID_CHAVE_DE_ACESSO&gt;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>export AWS_SECRET_ACCESS_KEY=&lt;CHAVE_SECRETA_DE_ACESSO&gt;
+</span></code></pre></div></li>
+<li>Modifique o <code>index.html</code> e o <code>error.html</code> de acordo com o site estático que deseja gerar para o usuário.</li>
+<li>Inicie o ambiente Terraform, carregando as dependências necessárias:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>terraform init
+</span></code></pre></div></li>
+<li>Aplique e solicite ao terraform que provisione os recursos solicitados na nuvem:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>terraform apply
+</span></code></pre></div></li>
+<li>Por fim, visualize se foi criado corretamente a infraestrutura no console da AWS.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Caso obtenha um erro WAFUnavailableEntityException depois da etapa 6, de acordo com um <a href="https://repost.aws/questions/QUQeWJBFD-QzeD17h5BJwZYg/error-wafunavailableentityexception">fórum da AWS</a> pode ser necessário aguardar alguns minutos para criar alguns recursos que estão associados, sendo assim, basta executar o comando novamente.</p>
+</div>
+<hr />
+<h2 id="imagens-de-verificacao">Imagens de Verificação<a class="headerlink" href="#imagens-de-verificacao" title="Permanent link">&para;</a></h2>
+<p><img>
+<center><strong>Tela de Início do WAF</strong></center> <br>
+<img alt="" src="../img/waf_init.png" />
+</img></p>
+<p><img>
+<center><strong>Tela da WebACL com o grupo de regras OWASP</strong></center> <br>
+<img alt="" src="../img/waf_group.png" />
+</img></p>
+<p><img>
+<center><strong>Tela do grupo com as regras do OWASP Top Ten</strong></center> <br>
+<img alt="" src="../img/waf_regular.png" />
+</img></p>
+<p><img>
+<center><strong>Tela do Estágio da API associado a WebACL Criada</strong></center> <br>
+<img alt="" src="../img/waf_apistage.png" />
+</img></p>
+<hr />
+<h2 id="codigo">Código<a class="headerlink" href="#codigo" title="Permanent link">&para;</a></h2>
+<p>O código por completo se encontra no arquivo <code>main.tf</code>. As etapas abaixo explicam o passo a passo para cada recurso criado pelo terraform. Entretanto, vale ressaltar que só vamos explicar nessa aba, os recursos criados para o WAF, pois nesta <a href="../apiProxy/#codigo">aba</a> da API Gateway como Proxy já explicamos as finalidades dos recursos criados.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Este código foi baseado na <a href="https://registry.terraform.io/modules/traveloka/waf-owasp-top-10-rules/aws/latest/examples/owasp-top-10">documentação do terraform</a>, entretanto, o repositório foi arquivado, dificultando as boas práticas. Como solução, foi adicionada a pasta <code>waf/</code> com todos os requisitos do owasp top ten de acordo com a referência.</p>
+</div>
+<p>Para garantir total segurança para o site, foi implementado o WAF com todas as 10 principais regras do OWASP. Sendo assim, foi criado uma WebACL para um WafRegional com o nome de <code>VerifyRequest</code>. Além disso, foi settado um grupo de regras que vem do módulo criado de acordo com a documentação do terraform. Por fim, é associado a WebACL criada com o estágio criado pela API Gateway.</p>
+<div class="language-tf highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.tf</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-273">273</a></span>
+<span class="normal"><a href="#__codelineno-5-274">274</a></span>
+<span class="normal"><a href="#__codelineno-5-275">275</a></span>
+<span class="normal"><a href="#__codelineno-5-276">276</a></span>
+<span class="normal"><a href="#__codelineno-5-277">277</a></span>
+<span class="normal"><a href="#__codelineno-5-278">278</a></span>
+<span class="normal"><a href="#__codelineno-5-279">279</a></span>
+<span class="normal"><a href="#__codelineno-5-280">280</a></span>
+<span class="normal"><a href="#__codelineno-5-281">281</a></span>
+<span class="normal"><a href="#__codelineno-5-282">282</a></span>
+<span class="normal"><a href="#__codelineno-5-283">283</a></span>
+<span class="normal"><a href="#__codelineno-5-284">284</a></span>
+<span class="normal"><a href="#__codelineno-5-285">285</a></span>
+<span class="normal"><a href="#__codelineno-5-286">286</a></span>
+<span class="normal"><a href="#__codelineno-5-287">287</a></span>
+<span class="normal"><a href="#__codelineno-5-288">288</a></span>
+<span class="normal"><a href="#__codelineno-5-289">289</a></span>
+<span class="normal"><a href="#__codelineno-5-290">290</a></span>
+<span class="normal"><a href="#__codelineno-5-291">291</a></span>
+<span class="normal"><a href="#__codelineno-5-292">292</a></span>
+<span class="normal"><a href="#__codelineno-5-293">293</a></span>
+<span class="normal"><a href="#__codelineno-5-294">294</a></span>
+<span class="normal"><a href="#__codelineno-5-295">295</a></span>
+<span class="normal"><a href="#__codelineno-5-296">296</a></span>
+<span class="normal"><a href="#__codelineno-5-297">297</a></span>
+<span class="normal"><a href="#__codelineno-5-298">298</a></span>
+<span class="normal"><a href="#__codelineno-5-299">299</a></span>
+<span class="normal"><a href="#__codelineno-5-300">300</a></span>
+<span class="normal"><a href="#__codelineno-5-301">301</a></span>
+<span class="normal"><a href="#__codelineno-5-302">302</a></span>
+<span class="normal"><a href="#__codelineno-5-303">303</a></span>
+<span class="normal"><a href="#__codelineno-5-304">304</a></span>
+<span class="normal"><a href="#__codelineno-5-305">305</a></span>
+<span class="normal"><a href="#__codelineno-5-306">306</a></span>
+<span class="normal"><a href="#__codelineno-5-307">307</a></span>
+<span class="normal"><a href="#__codelineno-5-308">308</a></span>
+<span class="normal"><a href="#__codelineno-5-309">309</a></span>
+<span class="normal"><a href="#__codelineno-5-310">310</a></span>
+<span class="normal"><a href="#__codelineno-5-311">311</a></span>
+<span class="normal"><a href="#__codelineno-5-312">312</a></span>
+<span class="normal"><a href="#__codelineno-5-313">313</a></span>
+<span class="normal"><a href="#__codelineno-5-314">314</a></span>
+<span class="normal"><a href="#__codelineno-5-315">315</a></span>
+<span class="normal"><a href="#__codelineno-5-316">316</a></span>
+<span class="normal"><a href="#__codelineno-5-317">317</a></span>
+<span class="normal"><a href="#__codelineno-5-318">318</a></span>
+<span class="normal"><a href="#__codelineno-5-319">319</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-5-273"><a id="__codelineno-5-273" name="__codelineno-5-273"></a><span class="hll"><span class="kr">module</span><span class="w"> </span><span class="nv">&quot;owasp_top_10&quot;</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-5-274"><a id="__codelineno-5-274" name="__codelineno-5-274"></a><span class="c1">  # This module is published on the registry: https://registry.terraform.io/modules/traveloka/waf-owasp-top-10-rules    </span>
+</span><span id="__span-5-275"><a id="__codelineno-5-275" name="__codelineno-5-275"></a>
+</span><span id="__span-5-276"><a id="__codelineno-5-276" name="__codelineno-5-276"></a><span class="c1">  # Open the link above to see what the latest version is. Highly encouraged to use the latest version if possible.</span>
+</span><span id="__span-5-277"><a id="__codelineno-5-277" name="__codelineno-5-277"></a>
+</span><span id="__span-5-278"><a id="__codelineno-5-278" name="__codelineno-5-278"></a><span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;./waf&quot;</span>
+</span><span id="__span-5-279"><a id="__codelineno-5-279" name="__codelineno-5-279"></a>
+</span><span id="__span-5-280"><a id="__codelineno-5-280" name="__codelineno-5-280"></a><span class="c1">  # For a better understanding of what are those parameters mean,</span>
+</span><span id="__span-5-281"><a id="__codelineno-5-281" name="__codelineno-5-281"></a><span class="c1">  # please read the description of each variable in the variables.tf file:</span>
+</span><span id="__span-5-282"><a id="__codelineno-5-282" name="__codelineno-5-282"></a><span class="c1">  # https://github.com/traveloka/terraform-aws-waf-owasp-top-10-rules/blob/master/variables.tf </span>
+</span><span id="__span-5-283"><a id="__codelineno-5-283" name="__codelineno-5-283"></a>
+</span><span id="__span-5-284"><a id="__codelineno-5-284" name="__codelineno-5-284"></a><span class="w">  </span><span class="na">product_domain</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tsi&quot;</span>
+</span><span id="__span-5-285"><a id="__codelineno-5-285" name="__codelineno-5-285"></a><span class="w">  </span><span class="na">service_name</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tsiwaf&quot;</span>
+</span><span id="__span-5-286"><a id="__codelineno-5-286" name="__codelineno-5-286"></a><span class="w">  </span><span class="na">environment</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;staging&quot;</span>
+</span><span id="__span-5-287"><a id="__codelineno-5-287" name="__codelineno-5-287"></a><span class="w">  </span><span class="na">description</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;OWASP Top 10 rules for tsiwaf&quot;</span>
+</span><span id="__span-5-288"><a id="__codelineno-5-288" name="__codelineno-5-288"></a><span class="w">  </span><span class="na">target_scope</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;regional&quot;</span>
+</span><span id="__span-5-289"><a id="__codelineno-5-289" name="__codelineno-5-289"></a><span class="p">}</span>
+</span><span id="__span-5-290"><a id="__codelineno-5-290" name="__codelineno-5-290"></a>
+</span><span id="__span-5-291"><a id="__codelineno-5-291" name="__codelineno-5-291"></a>
+</span><span id="__span-5-292"><a id="__codelineno-5-292" name="__codelineno-5-292"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_wafregional_web_acl&quot;</span><span class="w"> </span><span class="nv">&quot;WafDefend&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-293"><a id="__codelineno-5-293" name="__codelineno-5-293"></a><span class="hll"><span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;VerifyRequest&quot;</span>
+</span></span><span id="__span-5-294"><a id="__codelineno-5-294" name="__codelineno-5-294"></a><span class="w">  </span><span class="na">metric_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;VerifyRequest&quot;</span>
+</span><span id="__span-5-295"><a id="__codelineno-5-295" name="__codelineno-5-295"></a>
+</span><span id="__span-5-296"><a id="__codelineno-5-296" name="__codelineno-5-296"></a><span class="w">  </span><span class="nb">default_action</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-297"><a id="__codelineno-5-297" name="__codelineno-5-297"></a><span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ALLOW&quot;</span>
+</span><span id="__span-5-298"><a id="__codelineno-5-298" name="__codelineno-5-298"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-299"><a id="__codelineno-5-299" name="__codelineno-5-299"></a>
+</span><span id="__span-5-300"><a id="__codelineno-5-300" name="__codelineno-5-300"></a><span class="w">  </span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-301"><a id="__codelineno-5-301" name="__codelineno-5-301"></a><span class="w">    </span><span class="na">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+</span><span id="__span-5-302"><a id="__codelineno-5-302" name="__codelineno-5-302"></a>
+</span><span id="__span-5-303"><a id="__codelineno-5-303" name="__codelineno-5-303"></a><span class="c1">    # ID of the associated WAF rule</span>
+</span><span id="__span-5-304"><a id="__codelineno-5-304" name="__codelineno-5-304"></a><span class="hll"><span class="w">    </span><span class="na">rule_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">module.owasp_top_10.rule_group_id</span>
+</span></span><span id="__span-5-305"><a id="__codelineno-5-305" name="__codelineno-5-305"></a>
+</span><span id="__span-5-306"><a id="__codelineno-5-306" name="__codelineno-5-306"></a><span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GROUP&quot;</span>
+</span><span id="__span-5-307"><a id="__codelineno-5-307" name="__codelineno-5-307"></a>
+</span><span id="__span-5-308"><a id="__codelineno-5-308" name="__codelineno-5-308"></a><span class="w">    </span><span class="nb">override_action</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-309"><a id="__codelineno-5-309" name="__codelineno-5-309"></a><span class="c1">      # Valid values are `NONE` and `COUNT`</span>
+</span><span id="__span-5-310"><a id="__codelineno-5-310" name="__codelineno-5-310"></a><span class="w">      </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NONE&quot;</span>
+</span><span id="__span-5-311"><a id="__codelineno-5-311" name="__codelineno-5-311"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-312"><a id="__codelineno-5-312" name="__codelineno-5-312"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-313"><a id="__codelineno-5-313" name="__codelineno-5-313"></a><span class="p">}</span>
+</span><span id="__span-5-314"><a id="__codelineno-5-314" name="__codelineno-5-314"></a>
+</span><span id="__span-5-315"><a id="__codelineno-5-315" name="__codelineno-5-315"></a><span class="hll"><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_wafregional_web_acl_association&quot;</span><span class="w"> </span><span class="nv">&quot;AssociaWAF&quot;</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-5-316"><a id="__codelineno-5-316" name="__codelineno-5-316"></a><span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_api_gateway_stage.MyS3stage</span><span class="p">]</span>
+</span><span id="__span-5-317"><a id="__codelineno-5-317" name="__codelineno-5-317"></a><span class="w">  </span><span class="na">resource_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_api_gateway_stage.MyS3stage.arn</span>
+</span><span id="__span-5-318"><a id="__codelineno-5-318" name="__codelineno-5-318"></a><span class="w">  </span><span class="na">web_acl_id</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_wafregional_web_acl.WafDefend.id</span>
+</span><span id="__span-5-319"><a id="__codelineno-5-319" name="__codelineno-5-319"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["instant", "navigation.expand", "content.code.copy", {"tabs": true}], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+  
+      <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+      
+    
+  <script src="../assets/javascripts/custom.13133f3f.min.js"></script>
+
+  </body>
+</html>
