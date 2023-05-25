@@ -12,13 +12,30 @@ theme:
     - instant
     - navigation.expand
     - content.code.copy
+    - navigation.top
     - tabs: true
   name: 'material'
   icon:
     repo: fontawesome/brands/github 
   palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
       primary: 'blue'
+      toggle:
+        icon: material/brightness-7
+        name: Switch to system preference
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: 'blue'
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
       accent: 'pink'
+
   font:
     text: Roboto
     code: Roboto Mono
